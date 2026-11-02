@@ -22,3 +22,5 @@ Things I still need to check in the data:
 - B0005 EOL (first capacity <= 1.4 Ah) = discharge index 124, never goes back above 1.4 after that
 - B0005 test continued past EOL: 168 discharges in total, so about 43 after it. Reason not known yet.
 - capacity went back up late in the test (last 1.325 vs lowest 1.287). That looks like capacity regeneration.
+- B0007 lowest capacity = 1.4005 Ah at index 165, last = 1.4325 Ah. Never reaches 1.4, so no EOL observed.
+- Decision (provisional, to confirm): B0007 never reaches 1.4 Ah, so it is excluded from RUL testing and kept for capacity/SoH.
