@@ -1,0 +1,37 @@
+rule,held_out,model,mae_cycles,mae_last30
+first,B0005,naive_mean_eol_minus_cycle,19.976,13.838709677419354
+first,B0005,linear_cycle_only,21.43518639472447,20.500421674420537
+first,B0005,linear | all_features+cycle,23.410491749632182,28.454050482241733
+first,B0005,lightgbm | all_features+cycle,13.330535528905195,6.777214794976296
+first,B0005,linear | partial_curve+cycle,6.737912261381552,8.521307312966206
+first,B0005,lightgbm | partial_curve+cycle,18.52875050394174,11.59208794410424
+first,B0006,naive_mean_eol_minus_cycle,2.0,2.0
+first,B0006,linear_cycle_only,3.726969831347827,6.95079471156133
+first,B0006,linear | all_features+cycle,8.333008868641029,11.506586555592326
+first,B0006,lightgbm | all_features+cycle,10.454216192742441,9.013115390606613
+first,B0006,linear | partial_curve+cycle,2.6667944850671086,2.738224853554298
+first,B0006,lightgbm | partial_curve+cycle,12.837302180998673,10.009652088972265
+first,B0018,naive_mean_eol_minus_cycle,20.0,20.0
+first,B0018,linear_cycle_only,20.267955675474294,21.164314358497357
+first,B0018,linear | all_features+cycle,13.60896120126551,15.47836993922619
+first,B0018,lightgbm | all_features+cycle,11.197538913872354,18.69895977227527
+first,B0018,linear | partial_curve+cycle,3.256543001252889,5.162296020219377
+first,B0018,lightgbm | partial_curve+cycle,12.398033600190443,18.496477460756584
+permanent,B0005,naive_mean_eol_minus_cycle,2.464,2.3548387096774195
+permanent,B0005,linear_cycle_only,2.497834343972814,2.4931365362830746
+permanent,B0005,linear | all_features+cycle,2.440198540431351,2.0623639324736343
+permanent,B0005,lightgbm | all_features+cycle,2.982973532843544,1.9946933650999947
+permanent,B0005,linear | partial_curve+cycle,3.7257859642989053,3.5553252603463306
+permanent,B0005,lightgbm | partial_curve+cycle,2.6653241480425005,1.6187009618199564
+permanent,B0006,naive_mean_eol_minus_cycle,2.0,2.0
+permanent,B0006,linear_cycle_only,2.0076728769747105,2.0254208939125022
+permanent,B0006,linear | all_features+cycle,1.2853395022690344,1.0100655278191772
+permanent,B0006,lightgbm | all_features+cycle,1.7942520464188458,0.9053547006365343
+permanent,B0006,linear | partial_curve+cycle,1.831969850485011,1.7324791595669002
+permanent,B0006,lightgbm | partial_curve+cycle,1.398580436222703,0.9236359499635417
+permanent,B0018,naive_mean_eol_minus_cycle,0.5,0.5
+permanent,B0018,linear_cycle_only,0.517989503455706,0.5586654680845697
+permanent,B0018,linear | all_features+cycle,0.5542282754984387,0.12387369453122092
+permanent,B0018,lightgbm | all_features+cycle,3.938295639652446,1.7371635591539445
+permanent,B0018,linear | partial_curve+cycle,2.5658513257403563,1.8654012913325622
+permanent,B0018,lightgbm | partial_curve+cycle,2.106399279499136,0.8101332020854083

@@ -59,11 +59,68 @@ def lobo_capacity():
     return pd.DataFrame(rows)
 
 
+def lobo_rul(rule="first"):
+    """Leave-one-battery-out RUL in cycles. Only cycles before EOL are used."""
+    df = add_targets(load_all(), rule=rule)
+    X = build_features(df)
+    X["cycle"] = df["cycle"]
+    ok = (df["rul"].notna() & (df["rul"] >= 0)).to_numpy()  # B0007 drops out here
+    df, X = df[ok], X[ok]
+    y = df["rul"]
+    sets = {
+        "all_features+cycle": list(X.columns),
+        "partial_curve+cycle": PARTIAL + ["cycle"],
+    }
+
+    rows = []
+    for held_out in [b for b in BATTERIES if b != "B0007"]:
+        train = (df["battery"] != held_out).to_numpy()
+        test = ~train
+        ytr, yte = y[train], y[test].to_numpy()
+        mean_eol = df.loc[train].groupby("battery")["eol"].first().mean()
+
+        preds = {
+            "naive_mean_eol_minus_cycle": np.clip(
+                mean_eol - X.loc[test, "cycle"].to_numpy(), 0, None
+            ),
+            "linear_cycle_only": LinearRegression()
+            .fit(X.loc[train, ["cycle"]], ytr)
+            .predict(X.loc[test, ["cycle"]]),
+        }
+        for s, cols in sets.items():
+            lin = make_pipeline(SimpleImputer(strategy="median"), StandardScaler(), LinearRegression())
+            lin.fit(X.loc[train, cols], ytr)
+            preds[f"linear | {s}"] = lin.predict(X.loc[test, cols])
+
+            gbm = LGBMRegressor(
+                n_estimators=300, learning_rate=0.05, num_leaves=15,
+                min_child_samples=10, random_state=0, verbose=-1,
+            )
+            gbm.fit(X.loc[train, cols], ytr)
+            preds[f"lightgbm | {s}"] = gbm.predict(X.loc[test, cols])
+
+        late = yte <= 30  # the last 30 cycles before EOL matter most
+        for model, p in preds.items():
+            err = p - yte
+            rows.append({
+                "rule": rule,
+                "held_out": held_out,
+                "model": model,
+                "mae_cycles": np.abs(err).mean(),
+                "mae_last30": np.abs(err[late]).mean(),
+            })
+    return pd.DataFrame(rows)
+
+
 if __name__ == "__main__":
     res = lobo_capacity()
-    for metric in ["mae", "rmse"]:
-        t = res.pivot(index="model", columns="held_out", values=metric)
-        t["mean"] = t.mean(axis=1)
-        print(f"\n{metric.upper()} in Ah (lower is better)")
-        print(t.round(3).sort_values("mean"))
     res.to_csv("notebooks/results_capacity.csv", index=False)
+
+    out = pd.concat([lobo_rul("first"), lobo_rul("permanent")])
+    out.to_csv("notebooks/results_rul.csv", index=False)
+    for rule in ["first", "permanent"]:
+        for metric in ["mae_cycles", "mae_last30"]:
+            t = out[out["rule"] == rule].pivot(index="model", columns="held_out", values=metric)
+            t["mean"] = t.mean(axis=1)
+            print(f"\nRUL | EOL rule: {rule} | {metric} (lower is better)")
+            print(t.round(1).sort_values("mean"))

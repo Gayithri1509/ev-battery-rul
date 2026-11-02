@@ -59,3 +59,13 @@ Things I still need to check in the data:
 ## Feature check
 - t_to_3.0 correlates 1.00 with capacity, so it nearly restates the target. Run models on all features and on a partial curve (above 3.4 V) to be honest about this.
 - Total discharge time correlates only 0.95. Guess (to confirm): Capacity counts only discharge down to 2.7 V, so extra tail below 2.7 V in B0006/B0007/B0018 is not counted.
+## Capacity definition (confirmed)
+- Capacity = discharge to 2.7 V for all four batteries (error 0.003 Ah). README is right.
+- Lowest recorded voltages (2.46, 2.12, 1.74, 2.28) are below the stated cutoffs. Unexplained.
+
+## Capacity baselines (leave-one-battery-out, MAE in Ah)
+- linear all features 0.009 (leaky: t_to_3.0 corr 1.00), lightgbm all 0.024,
+  lightgbm partial curve 0.037, linear partial 0.048, linear cycle-only 0.081, naive 0.172.
+- Honest numbers: partial-curve rows. Report each battery separately (only 4 test results).
+- LightGBM loses to linear. Hypothesis (untested): B0006 range (1.15-2.04 Ah) is outside
+  the other three (1.29-1.89), and trees cannot predict outside their training range.
