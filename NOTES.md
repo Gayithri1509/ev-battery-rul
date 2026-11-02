@@ -53,3 +53,9 @@ Things I still need to check in the data:
 - Primary rule: EOL = first cycle <= 1.4 Ah. Check rule: "permanent" crossing (B0006 121, B0018 122).
 - NASA README says tests stopped at EOL, but our data continues past the first dip. Unexplained.
 - SoH = capacity / 2.0 Ah (decided). RUL = EOL cycle - current cycle. B0007 has no RUL (no EOL).
+## Features
+- Features = clues from the discharge curve: time to reach voltage levels, charge in voltage windows, voltage/temperature stats.
+- Total discharge time is left out on purpose: capacity is current x time, so it would leak the answer.
+## Feature check
+- t_to_3.0 correlates 1.00 with capacity, so it nearly restates the target. Run models on all features and on a partial curve (above 3.4 V) to be honest about this.
+- Total discharge time correlates only 0.95. Guess (to confirm): Capacity counts only discharge down to 2.7 V, so extra tail below 2.7 V in B0006/B0007/B0018 is not counted.
