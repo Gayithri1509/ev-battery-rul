@@ -69,3 +69,10 @@ Things I still need to check in the data:
 - Honest numbers: partial-curve rows. Report each battery separately (only 4 test results).
 - LightGBM loses to linear. Hypothesis (untested): B0006 range (1.15-2.04 Ah) is outside
   the other three (1.29-1.89), and trees cannot predict outside their training range.
+  ## RUL baselines (leave-one-battery-out, test on B0005, B0006, B0018; B0007 has no EOL)
+- EOL rule "first": EOL cycles 124 / 108 / 96. Best: linear partial_curve+cycle, MAE 4.2 cycles (naive 14.0).
+- EOL rule "permanent": EOL cycles 124 / 121 / 122, nearly the same, so a constant guess gets 1.7 cycles
+  and no model clearly beats it (best 1.4).
+- Model ranking flips between the two rules. With 3 test batteries and 2 training batteries per fold,
+  I cannot claim a winning model. Report both rules.
+- Naive got 2.0 on B0006 by luck (mean of 124 and 96 happens to be 110, true 108).
